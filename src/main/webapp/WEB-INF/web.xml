@@ -7,6 +7,11 @@
 
     <display-name>Web Servlet Project</display-name>
 
+    <!-- Keep the session id in a cookie instead of appending ;jsessionid to URLs. -->
+    <session-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+
     <welcome-file-list>
         <welcome-file>views/index.jsp</welcome-file>
     </welcome-file-list>
