@@ -26,12 +26,19 @@ public class UserServiceImpl implements IUserService {
         user.setOtpExpiry(LocalDateTime.now().plusMinutes(5));
 
         userDao.insert(user);
-        EmailUtil.sendOtpEmail(user.getEmail(), otp, "Kich hoat tai khoan");
+        if (!EmailUtil.sendOtpEmail(user.getEmail(), otp, "Kich hoat tai khoan")) {
+            // Khong de lai tai khoan mo chua co OTP neu dich vu mail that bai.
+            userDao.delete(user.getId());
+            return false;
+        }
         return true;
     }
 
     @Override
     public boolean verifyOtp(String emailOrUsername, String otp) {
+        if (emailOrUsername == null || emailOrUsername.isBlank() || otp == null || otp.isBlank()) {
+            return false;
+        }
         User user = userDao.findByUsername(emailOrUsername);
         if (user == null) {
             user = userDao.findByEmail(emailOrUsername);
@@ -69,17 +76,28 @@ public class UserServiceImpl implements IUserService {
             return false;
         }
 
+        String oldOtp = user.getOtp();
+        LocalDateTime oldOtpExpiry = user.getOtpExpiry();
         String otp = OtpUtil.generateOtp(6);
         user.setOtp(otp);
         user.setOtpExpiry(LocalDateTime.now().plusMinutes(5));
         userDao.update(user);
 
-        EmailUtil.sendOtpEmail(email, otp, "Dat lai mat khau");
+        if (!EmailUtil.sendOtpEmail(email, otp, "Dat lai mat khau")) {
+            user.setOtp(oldOtp);
+            user.setOtpExpiry(oldOtpExpiry);
+            userDao.update(user);
+            return false;
+        }
         return true;
     }
 
     @Override
     public boolean resetPassword(String email, String otp, String newPassword) {
+        if (email == null || email.isBlank() || otp == null || otp.isBlank()
+                || newPassword == null || newPassword.isBlank()) {
+            return false;
+        }
         User user = userDao.findByEmail(email);
         if (user == null) {
             return false;

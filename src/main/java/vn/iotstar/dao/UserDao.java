@@ -70,6 +70,25 @@ public class UserDao implements IUserDao {
     }
 
     @Override
+    public void delete(int id) {
+        EntityManager enma = JpaConfig.getEntityManager();
+        if (enma != null) {
+            EntityTransaction trans = enma.getTransaction();
+            try {
+                trans.begin();
+                User persisted = enma.find(User.class, id);
+                if (persisted != null) enma.remove(persisted);
+                trans.commit();
+            } catch (Exception e) {
+                if (trans.isActive()) trans.rollback();
+            } finally {
+                enma.close();
+            }
+        }
+        memoryUsers.removeIf(u -> u.getId() == id);
+    }
+
+    @Override
     public User findById(int id) {
         EntityManager enma = JpaConfig.getEntityManager();
         if (enma != null) {

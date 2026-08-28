@@ -63,7 +63,7 @@ public class RegisterController extends HttpServlet {
             session.setAttribute("verify_email", email.trim());
             resp.sendRedirect(req.getContextPath() + "/verify-otp");
         } else {
-            req.setAttribute("alert", "Ten dang nhap hoac Email da ton tai trong he thong.");
+            req.setAttribute("alert", "Khong the gui email OTP. Vui long kiem tra cau hinh SMTP va thu lai.");
             req.getRequestDispatcher("/views/register.jsp").forward(req, resp);
         }
     }
