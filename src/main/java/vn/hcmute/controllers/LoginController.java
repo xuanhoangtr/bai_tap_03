@@ -18,6 +18,7 @@ public class LoginController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private final IUserService userService = new UserServiceImpl();
+    private final vn.iotstar.service.IUserService iotUserService = new vn.iotstar.service.UserServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -52,14 +53,45 @@ public class LoginController extends HttpServlet {
         String remember = req.getParameter("remember");
         boolean isRememberMe = "on".equals(remember);
 
-        UserModel user = userService.login(username, password);
+        // 1. Kiem tra trong bang User JPA (co ho tro OTP)
+        vn.iotstar.entity.User iotUser = iotUserService.findByUsername(username);
+        if (iotUser != null) {
+            if (!iotUser.getPassword().equals(password)) {
+                req.setAttribute("alert", "Mat khau khong chinh xac.");
+                req.getRequestDispatcher("/views/login.jsp").forward(req, resp);
+                return;
+            }
 
+            // Kiem tra kich hoat OTP
+            if (iotUser.getStatus() != 1) {
+                req.setAttribute("alert", "Tai khoan chua duoc kich hoat qua Email OTP. Vui long nhap ma OTP de kich hoat.");
+                req.setAttribute("email", iotUser.getEmail());
+                req.getRequestDispatcher("/views/verify-otp.jsp").forward(req, resp);
+                return;
+            }
+
+            // Dang nhap thanh cong
+            UserModel account = new UserModel(iotUser.getId(), iotUser.getEmail(), iotUser.getUsername(), iotUser.getFullname(), iotUser.getPassword());
+            HttpSession session = req.getSession(true);
+            session.setAttribute(Constant.SESSION_ACCOUNT, account);
+
+            if (isRememberMe) {
+                Cookie cookie = new Cookie(Constant.COOKIE_REMEMBER, username);
+                cookie.setMaxAge(30 * 60);
+                cookie.setPath("/");
+                resp.addCookie(cookie);
+            }
+
+            resp.sendRedirect(req.getContextPath() + "/home");
+            return;
+        }
+
+        // 2. Kiem tra nguoi dung cu
+        UserModel user = userService.login(username, password);
         if (user != null) {
-            // Luu session
             HttpSession session = req.getSession(true);
             session.setAttribute(Constant.SESSION_ACCOUNT, user);
 
-            // Xu ly Remember Me voi Cookie (30 phut)
             if (isRememberMe) {
                 Cookie cookie = new Cookie(Constant.COOKIE_REMEMBER, username);
                 cookie.setMaxAge(30 * 60);
@@ -69,7 +101,8 @@ public class LoginController extends HttpServlet {
 
             resp.sendRedirect(req.getContextPath() + "/home");
         } else {
-            resp.sendRedirect(req.getContextPath() + "/error");
+            req.setAttribute("alert", "Tai khoan hoac mat khau khong chinh xac.");
+            req.getRequestDispatcher("/views/login.jsp").forward(req, resp);
         }
     }
 }
