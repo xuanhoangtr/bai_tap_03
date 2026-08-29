@@ -32,6 +32,10 @@ public class Category implements Serializable {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Video> videos = new ArrayList<>();
 
+    // 1-n association to Product
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private List<Product> products = new ArrayList<>();
+
     public Category() {
     }
 
@@ -91,6 +95,14 @@ public class Category implements Serializable {
         this.videos = videos;
     }
 
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
     public Video addVideo(Video video) {
         getVideos().add(video);
         video.setCategory(this);
@@ -101,5 +113,17 @@ public class Category implements Serializable {
         getVideos().remove(video);
         video.setCategory(null);
         return video;
+    }
+
+    public Product addProduct(Product product) {
+        getProducts().add(product);
+        product.setCategory(this);
+        return product;
+    }
+
+    public Product removeProduct(Product product) {
+        getProducts().remove(product);
+        product.setCategory(null);
+        return product;
     }
 }

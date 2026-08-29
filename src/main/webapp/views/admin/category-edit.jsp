@@ -29,7 +29,7 @@
             </c:otherwise>
         </c:choose>
 
-        <img height="150" width="200" src="${imgUrl}" onerror="this.src='https://via.placeholder.com/200x150?text=No+Image'" /><br><br>
+        <img height="150" width="200" src="${imgUrl}" /><br><br>
 
         <label for="images1">Upload images:</label><br>
         <input type="file" id="images1" name="images1"><br><br>

@@ -25,7 +25,7 @@
                 <tr class="odd gradeX">
                     <td>${STT.index + 1}</td>
                     <c:url value="/image?fname=${cate.icon}" var="imgUrl"></c:url>
-                    <td><img height="150" width="200" src="${imgUrl}" onerror="this.src='https://via.placeholder.com/200x150?text=No+Image'" /></td>
+                    <td><img height="150" width="200" src="${imgUrl}" /></td>
                     <td>${cate.name}</td>
                     <td>
                         <a href="<c:url value='/admin/category/edit?id=${cate.id}'/>" class="center">Sua</a>

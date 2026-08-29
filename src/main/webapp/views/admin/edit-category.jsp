@@ -20,7 +20,7 @@
         <br/>
         <div class="form-group">
             <c:url value="/image?fname=${category.icon}" var="imgUrl"></c:url>
-            <img class="img-responsive" width="100px" src="${imgUrl}" alt="" onerror="this.src='https://via.placeholder.com/100x80?text=No+Image'"><br/>
+            <img class="img-responsive" width="100px" src="${imgUrl}" alt=""><br/>
             <label>Anh dai dien</label>
             <input type="file" name="icon" value="${category.icon}" />
         </div>

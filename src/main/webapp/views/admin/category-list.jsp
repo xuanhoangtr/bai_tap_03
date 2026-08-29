@@ -34,7 +34,7 @@
                     </c:otherwise>
                 </c:choose>
 
-                <td align="center"><img height="150" width="200" src="${imgUrl}" onerror="this.src='https://via.placeholder.com/200x150?text=No+Image'" /></td>
+                <td align="center"><img height="150" width="200" src="${imgUrl}" /></td>
                 <td>${cate.categoryname}</td>
                 <td align="center">
                     <c:if test="${cate.status == 1}">Hoat dong</c:if>

@@ -18,17 +18,24 @@ public class CategoryDao implements ICategoryDao {
     static {
         Category c1 = new Category();
         c1.setCategoryid(autoId++);
-        c1.setCategoryname("Iphone");
+        c1.setCategoryname("Phone");
         c1.setImages("avatar.png");
         c1.setStatus(1);
         memoryList.add(c1);
 
         Category c2 = new Category();
         c2.setCategoryid(autoId++);
-        c2.setCategoryname("Samsung");
+        c2.setCategoryname("Laptop");
         c2.setImages("avatar.png");
         c2.setStatus(1);
         memoryList.add(c2);
+
+        Category c3 = new Category();
+        c3.setCategoryid(autoId++);
+        c3.setCategoryname("Tai nghe");
+        c3.setImages("avatar.png");
+        c3.setStatus(1);
+        memoryList.add(c3);
     }
 
     @Override
