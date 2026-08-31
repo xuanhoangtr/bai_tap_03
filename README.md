@@ -1,7 +1,5 @@
 # BÀI TẬP 03
 
-**Sinh viên thực hiện:** Trần Xuân Hoàng  
-
 ---
 
 ## I. YÊU CẦU
